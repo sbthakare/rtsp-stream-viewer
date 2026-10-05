@@ -1,0 +1,25 @@
+# Render Blueprint: New > Blueprint > pick this repo.
+services:
+  - type: web
+    name: rtsp-viewer-api
+    runtime: docker
+    rootDir: backend
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: ALLOWED_ORIGINS        # set to your frontend URL, e.g. https://rtsp-viewer.vercel.app
+        sync: false
+      - key: BLOCK_PRIVATE_HOSTS
+        value: "true"
+      - key: MAX_STREAMS
+        value: "4"
+
+  - type: web
+    name: rtsp-viewer-web
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL           # set to the backend URL from the service above
+        sync: false
