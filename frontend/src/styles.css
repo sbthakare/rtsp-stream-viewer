@@ -213,12 +213,17 @@ body { min-width: 320px; background: radial-gradient(circle at 100% 0, #e3efff 0
 html, body, #root { height: 100%; }
 @media (min-width: 761px) {
   body { overflow: hidden; }
-  .page { height: 100dvh; display: flex; flex-direction: column; padding: 18px 28px 20px; overflow: hidden; }
-  .top { min-height: 94px; margin: -18px -28px 14px; padding: 15px max(28px, calc((100vw - 1500px) / 2 + 28px)); flex: 0 0 auto; }
-  .top__icon { width: 48px; height: 48px; border-radius: 14px; font-size: 1.55rem; }
-  .top h1 { font-size: clamp(1.5rem, 2.5vw, 2.1rem); }
-  .top__sub { margin-top: 4px; font-size: .92rem; }
-  .top__stats .top__summary { min-width: 132px; padding: 7px 20px; }
+  .page { height: 100dvh; display: flex; flex-direction: column; padding: 0 28px 20px; overflow: hidden; }
+  .top { min-height: 67px; margin: 0 0 12px; padding: 9px 20px; border-radius: 21px; flex: 0 0 auto; box-shadow: 0 10px 24px rgba(19, 83, 183, .18); }
+  .top__identity { gap: 12px; }
+  .top__icon { width: 43px; height: 43px; border-radius: 10px; font-size: 1.35rem; }
+  .top__eyebrow { display: none; }
+  .top h1 { font-size: clamp(1.05rem, 1.6vw, 1.35rem); letter-spacing: -.025em; }
+  .top__sub { margin-top: 1px; font-size: .69rem; }
+  .top__stats .top__summary { min-width: 74px; padding: 3px 12px; }
+  .top__stats .top__summary-icon { margin-right: 4px; font-size: .9rem; }
+  .top__stats .top__summary-value { font-size: 1.15rem; }
+  .top__stats .top__summary-label { font-size: .55rem; }
   .add { flex: 0 0 auto; padding: 14px 18px; border-radius: 15px; }
   .add__form { grid-template-columns: minmax(280px, 1fr) minmax(180px, .32fr) 164px; gap: 13px; }
   .field { gap: 5px; }

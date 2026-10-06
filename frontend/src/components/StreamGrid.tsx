@@ -1,14 +1,15 @@
 import type { CSSProperties } from 'react';
-import type { GridColumns, StreamItem } from '../types';
+import type { GridColumns, StreamItem, TileStatus } from '../types';
 import { StreamTile } from './StreamTile';
 
 interface Props {
   streams: StreamItem[];
   columns: GridColumns;
   onRemove: (id: string) => void;
+  onStatusChange: (id: string, status: TileStatus) => void;
 }
 
-export function StreamGrid({ streams, columns, onRemove }: Props) {
+export function StreamGrid({ streams, columns, onRemove, onStatusChange }: Props) {
   if (streams.length === 0) {
     return (
       <div className="empty">
@@ -21,7 +22,7 @@ export function StreamGrid({ streams, columns, onRemove }: Props) {
   return (
     <div className={`grid ${columns === 'auto' ? 'grid--auto' : `grid--fixed grid--cols-${columns}`}`} style={style}>
       {streams.map((s) => (
-        <StreamTile key={s.id} item={s} onRemove={onRemove} />
+        <StreamTile key={s.id} item={s} onRemove={onRemove} onStatusChange={onStatusChange} />
       ))}
     </div>
   );

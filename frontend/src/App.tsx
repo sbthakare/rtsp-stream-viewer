@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { AddStreamForm } from './components/AddStreamForm';
 import { StreamGrid } from './components/StreamGrid';
 import { useStreams } from './hooks/useStreams';
-import type { GridColumns } from './types';
+import type { GridColumns, TileStatus } from './types';
 
 const LAYOUTS: { value: GridColumns; label: string }[] = [
   { value: 'auto', label: 'Auto' },
@@ -15,6 +15,21 @@ const LAYOUTS: { value: GridColumns; label: string }[] = [
 export default function App() {
   const { streams, add, remove, clear } = useStreams();
   const [columns, setColumns] = useState<GridColumns>('auto');
+  const [statuses, setStatuses] = useState<Record<string, TileStatus>>({});
+  const liveCount = streams.filter((stream) => statuses[stream.id] === 'live').length;
+  const reconnectingCount = streams.filter((stream) => statuses[stream.id] === 'connecting' || statuses[stream.id] === 'reconnecting').length;
+  const updateStreamStatus = useCallback((id: string, status: TileStatus) => {
+    setStatuses((current) => current[id] === status ? current : { ...current, [id]: status });
+  }, []);
+
+  const removeStream = (id: string) => {
+    remove(id);
+    setStatuses((current) => {
+      const next = { ...current };
+      delete next[id];
+      return next;
+    });
+  };
   return (
     <div className="page">
       <header className="top">
@@ -31,6 +46,14 @@ export default function App() {
             <span className="top__summary-icon" aria-hidden="true">◉</span>
             <span className="top__summary-value">{streams.length}</span>
             <span className="top__summary-label">Active streams</span>
+          </div>
+          <div className="top__summary top__summary--live">
+            <span className="top__summary-value">{liveCount}</span>
+            <span className="top__summary-label">Live</span>
+          </div>
+          <div className="top__summary top__summary--reconnecting">
+            <span className="top__summary-value">{reconnectingCount}</span>
+            <span className="top__summary-label">Reconnecting</span>
           </div>
         </div>
       </header>
@@ -57,14 +80,14 @@ export default function App() {
             ))}
           </div>
           {streams.length > 0 && (
-            <button type="button" className="btn btn--danger" onClick={clear}>
+            <button type="button" className="btn btn--danger" onClick={() => { clear(); setStatuses({}); }}>
               <span aria-hidden="true">⌫</span> Remove all
             </button>
           )}
         </div>
 
         <main className="streams-scroll">
-          <StreamGrid streams={streams} columns={columns} onRemove={remove} />
+          <StreamGrid streams={streams} columns={columns} onRemove={removeStream} onStatusChange={updateStreamStatus} />
         </main>
       </section>
     </div>

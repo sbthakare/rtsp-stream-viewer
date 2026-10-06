@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePlayer } from '../hooks/usePlayer';
 import { describeUrl } from '../lib/rtsp';
 import type { StreamItem, TileStatus } from '../types';
@@ -14,14 +14,19 @@ const STATUS_LABEL: Record<TileStatus, string> = {
 interface Props {
   item: StreamItem;
   onRemove: (id: string) => void;
+  onStatusChange: (id: string, status: TileStatus) => void;
 }
 
-export function StreamTile({ item, onRemove }: Props) {
+export function StreamTile({ item, onRemove, onStatusChange }: Props) {
   const tileRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [paused, setPaused] = useState(false);
   const [run, setRun] = useState(0);
   const { status, message, retry } = usePlayer(canvasRef, item.url, paused, run, () => setRun((r) => r + 1));
+
+  useEffect(() => {
+    onStatusChange(item.id, status);
+  }, [item.id, onStatusChange, status]);
 
   const togglePause = () => {
     if (paused) setRun((r) => r + 1); // fresh canvas for the new connection
