@@ -35,6 +35,8 @@ docker compose up --build
 
 This starts MediaMTX (RTSP server on `:8554`), three FFmpeg test publishers (`cam1`, `cam2`, `cam3`) and the Go backend on `:8080`. The Compose backend uses a `VIDEO_BITRATE` of `4000k` for higher-quality local testing.
 
+The test publishers intentionally show generated video rather than real cameras: `cam1` is an animated test pattern, `cam2` is a Mandelbrot pattern, and `cam3` is SMPTE colour bars. Add these local Docker URLs in the viewer: `rtsp://mediamtx:8554/cam1`, `rtsp://mediamtx:8554/cam2`, and `rtsp://mediamtx:8554/cam3`.
+
 ### 2. Start the frontend
 
 ```bash
@@ -103,6 +105,16 @@ The backend needs FFmpeg, so deploy it from `backend/Dockerfile` (Alpine + FFmpe
 **A camera the cloud backend can reach.** The deployed backend connects to RTSP URLs from the internet, so `localhost` and
 Docker hostnames will not work there. For the live demo, run MediaMTX plus the test publishers on a small VPS (or a Railway
 service with a TCP proxy for port 8554, or any public RTSP stream) and add `rtsp://<public-host>:8554/cam1`.
+
+When using a VPS as the RTSP host, deploy the `mediamtx`, `cam1`, `cam2`, and `cam3` services from `docker-compose.yml` on that VPS. The Render backend does not create those streams; it only reads them. Verify that every requested path has an active publisher:
+
+```bash
+docker compose up -d mediamtx cam1 cam2 cam3
+docker compose ps
+docker compose logs cam3
+```
+
+If `rtsp://<public-host>:8554/cam3` returns `404 Not Found`, no publisher is sending video to `/cam3`; start or fix the `cam3` service on the RTSP host. Replace the test publishers with your own camera publishers to show real footage.
 
 ## API
 

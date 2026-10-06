@@ -40,6 +40,10 @@ export function StreamTile({ item, onRemove }: Props) {
     <article className="tile" ref={tileRef} aria-label={item.name}>
       <div className="tile__screen">
         <canvas key={run} ref={canvasRef} className="tile__canvas" />
+        <span className={`tile__screen-status tile__screen-status--${status}`}>{STATUS_LABEL[status]}</span>
+        <button type="button" className="tile__screen-fullscreen" onClick={toggleFullscreen} aria-label={`Fullscreen ${item.name}`}>
+          ⛶
+        </button>
         {showOverlay && (
           <div className="tile__overlay" role={status === 'error' ? 'alert' : 'status'}>
             <p className="tile__overlay-title">
@@ -60,7 +64,7 @@ export function StreamTile({ item, onRemove }: Props) {
       <div className="tile__bar">
         <div className="tile__meta">
           <h3 className="tile__name" title={item.name}>
-            {item.name}
+            <span aria-hidden="true">◉</span>{item.name}
           </h3>
           <p className="tile__url" title={masked}>
             {masked}
@@ -69,13 +73,13 @@ export function StreamTile({ item, onRemove }: Props) {
         <span className={`status status--${status}`}>{STATUS_LABEL[status]}</span>
         <div className="tile__actions">
           <button type="button" className="btn" onClick={togglePause} aria-pressed={paused}>
-            {paused ? 'Play' : 'Pause'}
+            <span aria-hidden="true">{paused ? '▶' : 'Ⅱ'}</span>{paused ? 'Play' : 'Pause'}
           </button>
           <button type="button" className="btn" onClick={toggleFullscreen}>
-            Fullscreen
+            <span aria-hidden="true">⛶</span>Fullscreen
           </button>
           <button type="button" className="btn btn--danger" onClick={() => onRemove(item.id)}>
-            Remove
+            <span aria-hidden="true">⌫</span>Remove
           </button>
         </div>
       </div>

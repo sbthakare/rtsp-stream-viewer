@@ -34,9 +34,7 @@ export function AddStreamForm({ onAdd }: Props) {
 
   return (
     <section className="add" aria-labelledby="add-heading">
-      <h2 id="add-heading" className="visually-hidden">
-        Add a stream
-      </h2>
+      <h2 id="add-heading" className="visually-hidden">Add a stream</h2>
       <form className="add__form" onSubmit={handleSubmit} noValidate>
         <div className="field field--grow">
           <label htmlFor="stream-url">Stream URL</label>
@@ -54,21 +52,17 @@ export function AddStreamForm({ onAdd }: Props) {
           />
         </div>
         <div className="field">
-          <label htmlFor="stream-name">Name (optional)</label>
+          <label htmlFor="stream-name">Stream name <span>(optional)</span></label>
           <input id="stream-name" type="text" placeholder="Front door" value={name} onChange={(e) => setName(e.target.value)} maxLength={60} />
         </div>
-        <button type="submit" className="btn btn--primary" disabled={busy}>
-          {busy ? 'Checking…' : 'Add stream'}
+        <button type="submit" className="btn btn--primary btn--add" disabled={busy}>
+          <span aria-hidden="true">+</span>{busy ? 'Checking...' : 'Add stream'}
         </button>
       </form>
-      {error && (
-        <p id="add-error" className="add__error" role="alert">
-          {error}
-        </p>
-      )}
+      {error && <p id="add-error" className="add__error" role="alert">{error}</p>}
       {demoStreams.length > 0 && (
         <p className="add__demo">
-          Test streams:{' '}
+          Test streams:
           {demoStreams.map((d) => (
             <button key={d} type="button" className="chip" onClick={() => void submit(d, '')} disabled={busy}>
               {d.split('/').pop()}

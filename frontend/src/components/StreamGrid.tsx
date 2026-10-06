@@ -19,7 +19,7 @@ export function StreamGrid({ streams, columns, onRemove }: Props) {
   }
   const style = { '--cols': columns === 'auto' ? undefined : columns } as CSSProperties;
   return (
-    <div className={`grid ${columns === 'auto' ? 'grid--auto' : 'grid--fixed'}`} style={style}>
+    <div className={`grid ${columns === 'auto' ? 'grid--auto' : `grid--fixed grid--cols-${columns}`}`} style={style}>
       {streams.map((s) => (
         <StreamTile key={s.id} item={s} onRemove={onRemove} />
       ))}
