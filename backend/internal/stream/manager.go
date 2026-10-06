@@ -243,6 +243,7 @@ func (s *Stream) run() {
 
 	buf := make([]byte, tsChunk)
 	gotData := false
+	var bytesSent int64
 	for {
 		n, readErr := io.ReadFull(out, buf)
 		if n > 0 {
@@ -250,6 +251,7 @@ func (s *Stream) run() {
 				gotData = true
 				startTimer.Stop()
 			}
+			bytesSent += int64(n)
 			chunk := make([]byte, n)
 			copy(chunk, buf[:n])
 			s.broadcast(chunk)
@@ -258,7 +260,16 @@ func (s *Stream) run() {
 			break
 		}
 	}
-	_ = cmd.Wait()
+	waitErr := cmd.Wait()
+
+	// DIAGNOSTIC: shows FFmpeg's real exit reason in the server logs. Remove once the issue is fixed,
+	// because FFmpeg's output can include the stream URL.
+	s.m.log.Warn("ffmpeg exited",
+		"stream", s.label,
+		"err", waitErr,
+		"bytesSent", bytesSent,
+		"stderr", strings.TrimSpace(stderr.String()),
+	)
 
 	f := s.classify(gotData, stderr.String())
 	s.m.log.Info("stream ended", "stream", s.label, "reason", f.Message, "retryable", f.Retryable)

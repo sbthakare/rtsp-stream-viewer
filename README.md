@@ -33,7 +33,7 @@ Prerequisites: Node 18+, and either Docker **or** Go 1.22+ with FFmpeg installed
 docker compose up --build
 ```
 
-This starts MediaMTX (RTSP server on `:8554`), three FFmpeg test publishers (`cam1`, `cam2`, `cam3`) and the Go backend on `:8080`.
+This starts MediaMTX (RTSP server on `:8554`), three FFmpeg test publishers (`cam1`, `cam2`, `cam3`) and the Go backend on `:8080`. The Compose backend uses a `VIDEO_BITRATE` of `4000k` for higher-quality local testing.
 
 ### 2. Start the frontend
 
@@ -76,7 +76,7 @@ Backend environment variables (see `backend/.env.example`):
 | `PORT` | `8080` | HTTP port (hosting platforms set this) |
 | `ALLOWED_ORIGINS` | `*` | Comma-separated frontend origins allowed to call the API/WebSocket. **Set this in production.** |
 | `MAX_STREAMS` | `8` | Max simultaneous FFmpeg processes |
-| `VIDEO_BITRATE` / `MAX_WIDTH` / `FPS` | `1500k` / `960` / `25` | Output quality vs CPU/bandwidth |
+| `VIDEO_BITRATE` / `MAX_WIDTH` / `FPS` | `1500k` / `960` / `25` | Output quality vs CPU/bandwidth. `docker-compose.yml` overrides `VIDEO_BITRATE` to `4000k` for local testing. |
 | `ALLOWED_RTSP_HOSTS` | empty | Optional allow-list of RTSP hosts |
 | `BLOCK_PRIVATE_HOSTS` | `false` | Refuse loopback/private addresses (turn on for public deployments) |
 | `IDLE_GRACE_SECONDS` | `5` | Keep FFmpeg alive briefly after the last viewer leaves |
