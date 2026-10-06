@@ -13,6 +13,10 @@ services:
         value: "true"
       - key: MAX_STREAMS
         value: "4"
+      - key: VIDEO_BITRATE
+        value: "4000k"
+      - key: FPS
+        value: "25"
 
   - type: web
     name: rtsp-viewer-web

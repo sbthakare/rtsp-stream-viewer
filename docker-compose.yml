@@ -42,3 +42,4 @@ services:
       ALLOWED_ORIGINS: "*"
       MAX_STREAMS: "8"
       VIDEO_BITRATE: "4000k"
+      FPS: "25"

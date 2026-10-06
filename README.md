@@ -76,7 +76,7 @@ Backend environment variables (see `backend/.env.example`):
 | `PORT` | `8080` | HTTP port (hosting platforms set this) |
 | `ALLOWED_ORIGINS` | `*` | Comma-separated frontend origins allowed to call the API/WebSocket. **Set this in production.** |
 | `MAX_STREAMS` | `8` | Max simultaneous FFmpeg processes |
-| `VIDEO_BITRATE` / `MAX_WIDTH` / `FPS` | `1500k` / `960` / `25` | Output quality vs CPU/bandwidth. `docker-compose.yml` overrides `VIDEO_BITRATE` to `4000k` for local testing. |
+| `VIDEO_BITRATE` / `MAX_WIDTH` / `FPS` | `1500k` / `960` / `25` | Output quality vs CPU/bandwidth. `FPS` must be 24, 25, 30, 50, or 60 because the browser pipeline uses MPEG-1; an unsupported value falls back to 25. `docker-compose.yml` uses `4000k` and 25 fps for local testing. |
 | `ALLOWED_RTSP_HOSTS` | empty | Optional allow-list of RTSP hosts |
 | `BLOCK_PRIVATE_HOSTS` | `false` | Refuse loopback/private addresses (turn on for public deployments) |
 | `IDLE_GRACE_SECONDS` | `5` | Keep FFmpeg alive briefly after the last viewer leaves |

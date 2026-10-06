@@ -29,7 +29,7 @@ func Load() Config {
 		MaxStreams:        envInt("MAX_STREAMS", 8),
 		VideoBitrate:      env("VIDEO_BITRATE", "1500k"),
 		MaxWidth:          envInt("MAX_WIDTH", 960),
-		FPS:               envInt("FPS", 25),
+		FPS:               envMPEG1FPS("FPS", 25),
 		IdleGrace:         time.Duration(envInt("IDLE_GRACE_SECONDS", 5)) * time.Second,
 		StartTimeout:      time.Duration(envInt("START_TIMEOUT_SECONDS", 20)) * time.Second,
 		AllowedOrigins:    envList("ALLOWED_ORIGINS", []string{"*"}),
@@ -50,6 +50,19 @@ func envInt(key string, fallback int) int {
 		return v
 	}
 	return fallback
+}
+
+// envMPEG1FPS accepts only integer frame rates supported by the MPEG-1 encoder.
+// JSMpeg consumes MPEG-1 video, so passing rates such as 15 fps to FFmpeg causes
+// the encoder to fail before it can write any stream data.
+func envMPEG1FPS(key string, fallback int) int {
+	v := envInt(key, fallback)
+	switch v {
+	case 24, 25, 30, 50, 60:
+		return v
+	default:
+		return fallback
+	}
 }
 
 func envBool(key string, fallback bool) bool {
